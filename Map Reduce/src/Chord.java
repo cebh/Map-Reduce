@@ -12,11 +12,18 @@ import java.io.*;
 */
 public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordMessageInterface
 {
+	/**Constant*/
     public static final int M = 2;
     
+    /**Represents a TreeMap for the reduced map phase*/
     public static TreeMap<Long, String> reduceMap;
+    
+    /**Represents a TreeMap for the initial map phase*/
     public static TreeMap<Long, List<String>> mapMap;
-    /** rmi registry for lookup the remote objects.*/
+    /** Represents the node's pointers*/
+	ChordMessageInterface[] finger;
+
+	/** rmi registry for lookup the remote objects.*/
     Registry registry;    
 
     /** Represents the node's sucessor*/
@@ -24,9 +31,6 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 
     /** Represents the node's predecessor*/
     ChordMessageInterface predecessor;
-
-    /** Represents the node's pointers*/
-    ChordMessageInterface[] finger;
 
     /** Represents the node's next pointer*/
     int nextFinger;
@@ -413,6 +417,12 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
         }
     }
 
+    /**
+     * Map phase that sorts the keys by adding them to a TreeMap
+     * @param key - guid
+     * @param value - page content
+     * @param counter - counter object
+     */
     public void emitMap(long key, String value, Counter counter) throws RemoteException
     {
         if(isKeyInSemiCloseInterval(key, predecessor.getId(), guid)) {
@@ -434,7 +444,13 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
             closestPrecedingNode(key).emitMap(key,value,counter);
         }
     }
-
+    
+    /**
+     * Removes repeated keys from the map
+     * @param key - guid
+     * @param value - page content
+     * @param counter - counter object
+     */
     public void emitReduce(long key, String value, Counter counter) throws RemoteException {
         if(isKeyInSemiCloseInterval(key, predecessor.getId(), guid)) {
             //stores key and value in TreeMap<Long,String>
@@ -447,6 +463,12 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
         }
     }
 
+    /**
+     * Reads the page and maps the content
+     * @param key - guid
+     * @param mapper - interface that maps the content
+     * @param counter - counter object
+     */
     public void mapContext(long key, MapInterface mapper, Counter counter) throws RemoteException {
         // open page
     	Scanner sc = new Scanner(get(key));
@@ -459,12 +481,23 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
     	
     }
 
+    /**
+     * Removes the repeated content
+     * @param key - guid
+     * @param mapper - interface that maps the content
+     * @param counter - counter object
+     */
     public void reduceContext(int source, ReduceInterface reducer, Counter counter) throws RemoteException {
         // open page
         // for each line, mapper.map(key, value, counter)
         
     }
 
+    /**
+     * Create a new file that stores the tree in the file output in  page guid
+     * @param source - source id
+     * @param counter - counter object
+     */
     public void completed(int source, Counter counter) throws RemoteException {
 
     }

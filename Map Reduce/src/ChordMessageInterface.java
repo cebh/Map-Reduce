@@ -76,15 +76,43 @@ public interface ChordMessageInterface extends Remote
     */
     public void delete(long guidObject) throws IOException, RemoteException;
 
-
+    /**
+     * Map phase that sorts the keys by adding them to a TreeMap
+     * @param key - guid
+     * @param value - page content
+     * @param counter - counter object
+     */
     void emitMap(long key, String value, Counter counter) throws RemoteException;
 
+    /**
+     * Removes repeated keys from the map
+     * @param key - guid
+     * @param value - page content
+     * @param counter - counter object
+     */
     void emitReduce(long key, String value, Counter counter) throws RemoteException;
 
+    /**
+     * Reads the page and maps the content
+     * @param key - guid
+     * @param mapper - interface that maps the content
+     * @param counter - counter object
+     */
     void mapContext(long key, MapInterface mapper, Counter counter) throws RemoteException;
 
+    /**
+     * Removes the repeated content
+     * @param key - guid
+     * @param mapper - interface that maps the content
+     * @param counter - counter object
+     */
     void reduceContext(int source, ReduceInterface reducer, Counter counter) throws RemoteException;
-
+    
+    /**
+     * Create a new file that stores the tree in the file output in  page guid
+     * @param source - source id
+     * @param counter - counter object
+     */
     void completed(int source, Counter counter) throws RemoteException;
     
 }

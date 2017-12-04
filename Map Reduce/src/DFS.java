@@ -325,17 +325,32 @@ public class DFS
         return array;
     }
     
-    
+    /**
+     * Reads the content from the last page in a file 
+     * @param fileName – name of file to be read from
+     */
     public byte[] tail(String fileName) throws Exception
     {
         // TODO: return the last page of the fileName
         return read(fileName,-1);
     }
+    
+    /**
+     * Reads the content from the first page in a file 
+     * @param fileName – name of file to be read from
+     */
     public byte[] head(String fileName) throws Exception
     {
         // TODO: return the first page of the fileName
         return read(fileName,1);
     }
+    
+    
+    /**
+     * Appends content to a file 
+     * @param fileName – name of file to append to
+     * @param data - content to be appended
+     */
     public void append(String filename, byte[] data) throws Exception
     {
         // TODO: append data to fileName. If it is needed, add a new page.
@@ -446,7 +461,11 @@ public class DFS
 
         
     }
-
+    
+    /**
+     * Runs map reduce on a file
+     * @param fileName - name of file
+     */
     public void runMapReduce(String fileName)
     {
         Counter mapCounter = new Counter();
