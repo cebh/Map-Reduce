@@ -77,11 +77,11 @@ public interface ChordMessageInterface extends Remote
     public void delete(long guidObject) throws IOException, RemoteException;
 
 
-    void emitMap(int key, String value, Counter counter) throws RemoteException;
+    void emitMap(long key, String value, Counter counter) throws RemoteException;
 
-    void emitReduce(int key, String value, Counter counter) throws RemoteException;
+    void emitReduce(long key, String value, Counter counter) throws RemoteException;
 
-    void mapContext(int page, MapInterface mapper, Counter counter) throws RemoteException;
+    void mapContext(long key, MapInterface mapper, Counter counter) throws RemoteException;
 
     void reduceContext(int source, ReduceInterface reducer, Counter counter) throws RemoteException;
 

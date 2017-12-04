@@ -50,6 +50,7 @@ public class Client {
             System.out.println("7. head");
             System.out.println("8. append");
             System.out.println("9. move");
+            System.out.println("10. map reduce");
             System.out.println("0. quit");
 
             String choice = in.nextLine();
@@ -135,6 +136,11 @@ public class Client {
                         String newName = in.nextLine();
                         dfs.mv(old_Name,newName);
                         break;
+                    case "10":
+                    	System.out.println("Enter file name");
+                    	String fileName = in.next();
+                    	dfs.runMapReduce(fileName);
+                    	break;
                     case "0":
                         //quit
                         

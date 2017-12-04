@@ -447,16 +447,41 @@ public class DFS
         
     }
 
-    public void runMapReduce(File file)
+    public void runMapReduce(String fileName)
     {
         Counter mapCounter = new Counter();
         Counter reduceCounter = new Counter();
         Counter completedCounter = new Counter();
         
         Mapper mapperReducer = new Mapper();
-        //MapInterface mapper = new MapInterface();
-        //ReduceInterface reducer = new ReduceInterface();
+        //get number of pages
+        int numPages = 0;
+        JsonArray pages = null;
+        JsonParser jp = new JsonParser();
+        JsonReader jr = readMetaData();
+        JsonObject meta = (JsonObject)jp.parse(jr);
+        JsonArray fileList = meta.getAsJsonArray("metadata");
+        for(int i = 0; i < fileList.size(); i++){
+        	JsonObject jo = fileList.get(i).getAsJsonObject();
+        	String name = jo.get("name").getAsString();
+        	if(name.equals(fileName))
+        	{
+        		numPages = jo.get("numberOfPages").getAsInt();
+        		pages = jo.get("pages").getAsJsonArray();
+        	}
+        	break;
+        }
         
+        for(int i = 0; i < pages.size(); i++)
+        {
+        	JsonObject p = pages.get(i).getAsJsonObject();
+        	mapCounter.add(p.get("guid").getAsLong());
+        	
+        }
+        // get name of file
+        String name = jo.get("name").getAsString();
+        int num = jo.get("numberOfPages").getAsInt();
+        // if name is the filename we're looking for
         // map Phases
         //for each page in metafile.file
         //    mapCounter.add(page);

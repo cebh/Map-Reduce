@@ -8,8 +8,8 @@ import java.io.*;
 // counter class keeps track of guids
 public class Counter implements CounterInterface {
 	long counter =0;
-	Set<Integer> set;
-	public void add(int key)
+	Set<Long> set;
+	public void add(long key)
 	{
 		set.add(key);
 	}
@@ -19,7 +19,7 @@ public class Counter implements CounterInterface {
 			return true;
 		return false;
 	}
-	public void increment(int key, int n) throws RemoteException
+	public void increment(long key, int n) throws RemoteException
 	{
 		set.remove(key);
 		counter+= n;

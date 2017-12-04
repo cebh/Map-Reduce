@@ -14,6 +14,8 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 {
     public static final int M = 2;
     
+    public static TreeMap<Long, String> reduceMap;
+    public static TreeMap<Long, List<String>> mapMap;
     /** rmi registry for lookup the remote objects.*/
     Registry registry;    
 
@@ -349,6 +351,8 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
     */   
     public Chord(int port, long guid) throws RemoteException 
     {
+    	TreeMap<Long, String> reduceMap = new TreeMap<Long, String>();
+        TreeMap<Long, List<String>> mapMap = new TreeMap<Long, List<String>>();
         int j;
 	    finger = new ChordMessageInterface[M];
         for (j=0;j<M; j++)
@@ -409,10 +413,20 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
         }
     }
 
-    public void emitMap(int key, String value, Counter counter) throws RemoteException
+    public void emitMap(long key, String value, Counter counter) throws RemoteException
     {
         if(isKeyInSemiCloseInterval(key, predecessor.getId(), guid)) {
-            // TODO store key and value in TreeMap<Long,List<String>>
+            //stores key and value in TreeMap<Long,List<String>>
+        	if(mapMap.containsKey(key))
+        	{
+        		List<String> newList = mapMap.get(key);
+        		newList.add(value);
+        		mapMap.put(key, newList);
+        	} else {
+        		List<String> newList = new ArrayList<String>();
+        		newList.add(value);
+        		mapMap.put(key, newList);
+        	}
             counter.decrement();
         } else if(isKeyInSemiCloseInterval(key, guid, successor.getId())) {
             successor.emitMap(key, value, counter);
@@ -421,9 +435,10 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
         }
     }
 
-    public void emitReduce(int key, String value, Counter counter) throws RemoteException {
+    public void emitReduce(long key, String value, Counter counter) throws RemoteException {
         if(isKeyInSemiCloseInterval(key, predecessor.getId(), guid)) {
-            // TODO store key and value in TreeMap<Long,String>
+            //stores key and value in TreeMap<Long,String>
+        	reduceMap.put(key, value);
             counter.decrement();
         } else if(isKeyInSemiCloseInterval(key, guid, successor.getId())) {
             successor.emitReduce(key, value, counter);
@@ -432,10 +447,16 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
         }
     }
 
-    public void mapContext(int page, MapInterface mapper, Counter counter) throws RemoteException {
+    public void mapContext(long key, MapInterface mapper, Counter counter) throws RemoteException {
         // open page
-        // for each line, mapper.map(key, value, counter)
-        
+    	Scanner sc = new Scanner(get(key));
+    	while(sc.hasNextLine())
+    	{
+    		System.out.println(sc.nextLine());
+		}
+    	sc.close();
+        // for each line, mapper.map(key, value, counter)    
+    	
     }
 
     public void reduceContext(int source, ReduceInterface reducer, Counter counter) throws RemoteException {
