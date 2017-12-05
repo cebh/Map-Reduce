@@ -468,15 +468,40 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
      * @param key - guid
      * @param mapper - interface that maps the content
      * @param counter - counter object
+     * @throws IOException 
      */
-    public void mapContext(long key, MapInterface mapper, Counter counter) throws RemoteException {
+    public void mapContext(long key, MapInterface mapper, Counter counter) throws IOException {
         // open page
-    	Scanner sc = new Scanner(get(key));
-    	while(sc.hasNextLine())
-    	{
-    		System.out.println(sc.nextLine());
-		}
-    	sc.close();
+//    	Scanner sc = new Scanner(get(key)).useDelimiter("\\A");
+//    	System.out.println("HERE");
+//    	while(sc.hasNext())
+//    	{
+//    		System.out.println(sc.next());
+//		}
+//    	sc.close();
+    	
+    	byte[]array = new byte[1024];
+    	
+    	InputStream is = get(key);
+    	is.read(array);
+    	System.out.println(new String(array));
+//    	String text = "TeXT:";
+//    	try{
+//    		while(true){
+//    			text += (char) is.re
+//    		}
+//        } catch (Exception e)
+//        {
+//        	System.out.println("Done");
+//        } finally {
+//        	try {
+//				is.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//        	System.out.println(text);
+//        }
         // for each line, mapper.map(key, value, counter)    
     	
     }
@@ -486,11 +511,29 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
      * @param key - guid
      * @param mapper - interface that maps the content
      * @param counter - counter object
+     * @throws IOException 
      */
-    public void reduceContext(int source, ReduceInterface reducer, Counter counter) throws RemoteException {
+    public void reduceContext(long key, ReduceInterface reducer, Counter counter) throws IOException {
         // open page
         // for each line, mapper.map(key, value, counter)
         
+    	ChordMessageInterface peer = locateSuccessor(key);
+        InputStream is = peer.get(key);
+        String text = "THE STUFF IS:";
+        try{
+        	text += (char) is.read();
+        } catch (Exception e)
+        {
+        	System.out.println("Done");
+        } finally {
+        	is.close();
+        	System.out.println(text);
+        }
+//        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+//        int nRead = is.read(array, 0, array.length);
+//        buffer.write(array, 0, nRead);
+//        buffer.flush();
+//        is.close();
     }
 
     /**
@@ -498,7 +541,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
      * @param source - source id
      * @param counter - counter object
      */
-    public void completed(int source, Counter counter) throws RemoteException {
+    public void completed(long key, Counter counter) throws RemoteException {
 
     }
 }

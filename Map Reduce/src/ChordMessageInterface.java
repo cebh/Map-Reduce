@@ -97,22 +97,24 @@ public interface ChordMessageInterface extends Remote
      * @param key - guid
      * @param mapper - interface that maps the content
      * @param counter - counter object
+     * @throws IOException 
      */
-    void mapContext(long key, MapInterface mapper, Counter counter) throws RemoteException;
+    void mapContext(long key, MapInterface mapper, Counter counter) throws RemoteException, IOException;
 
     /**
      * Removes the repeated content
      * @param key - guid
      * @param mapper - interface that maps the content
      * @param counter - counter object
+     * @throws IOException 
      */
-    void reduceContext(int source, ReduceInterface reducer, Counter counter) throws RemoteException;
+    void reduceContext(long key, ReduceInterface reducer, Counter counter) throws RemoteException, IOException;
     
     /**
      * Create a new file that stores the tree in the file output in  page guid
      * @param source - source id
      * @param counter - counter object
      */
-    void completed(int source, Counter counter) throws RemoteException;
+    void completed(long key, Counter counter) throws RemoteException;
     
 }

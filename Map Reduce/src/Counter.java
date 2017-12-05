@@ -18,6 +18,10 @@ public class Counter implements CounterInterface {
 	/**Set of guids*/
 	Set<Long> set;
 	
+	public Counter()
+	{
+		set = new HashSet<Long>();
+	}
 	/**
 	 * Adds a guid to the set
 	 * @param key - guid

@@ -95,6 +95,7 @@ public class DFS
     {
         //JsonParser jsonParser _ null;
         long guid = md5("Metadata");
+        System.out.println(guid);
         ChordMessageInterface peer = chord.locateSuccessor(guid);
         InputStream metadataraw = peer.get(guid);
         // jsonParser = Json.createParser(metadataraw);
@@ -465,8 +466,9 @@ public class DFS
     /**
      * Runs map reduce on a file
      * @param fileName - name of file
+     * @throws Exception 
      */
-    public void runMapReduce(String fileName)
+    public void runMapReduce(String fileName) throws Exception
     {
         Counter mapCounter = new Counter();
         Counter reduceCounter = new Counter();
@@ -490,16 +492,29 @@ public class DFS
         	}
         	break;
         }
-        
         for(int i = 0; i < pages.size(); i++)
         {
         	JsonObject p = pages.get(i).getAsJsonObject();
         	mapCounter.add(p.get("guid").getAsLong());
+        	long guid = md5("Metadata");
+            ChordMessageInterface peer = chord.locateSuccessor(guid);
+        	
+
+            peer.mapContext(guid, mapperReducer, mapCounter);
+            while (!mapCounter.hasCompleted());
+            
+            peer.reduceContext(guid, mapperReducer, reduceCounter);
+            while (!reduceCounter.hasCompleted());
+            
+            peer.completed(guid, completedCounter);
+            while (!completedCounter.hasCompleted());
+            
+            System.out.println("we did it");
         	
         }
         // get name of file
-        String name = jo.get("name").getAsString();
-        int num = jo.get("numberOfPages").getAsInt();
+//        String name = jo.get("name").getAsString();
+//        int num = jo.get("numberOfPages").getAsInt();
         // if name is the filename we're looking for
         // map Phases
         //for each page in metafile.file
