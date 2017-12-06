@@ -60,6 +60,15 @@ public class DFS
         long guid = md5("" + port);
         chord = new Chord(port, guid);
         Files.createDirectories(Paths.get(guid+"/repository"));
+        System.out.println(md5("Metadata"));
+        File f = new File(guid+"/repository/"+md5("Metadata"));
+        if(!f.exists())
+        {
+        	PrintWriter pr = new PrintWriter(f);
+        	pr.print("{\"metadata\":[]}");
+        	pr.close();
+        	f.createNewFile();
+        }
     }
     
 
@@ -237,6 +246,7 @@ public class DFS
         InputStream is = new FileStream(str.getBytes(Charset.forName("UTF-8")));
         writeMetaData(is);
 
+        //"{\"metadata\":[]}"
         // Write Metadata        
     }
 

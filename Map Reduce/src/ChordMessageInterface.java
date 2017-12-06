@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.Remote;
@@ -62,7 +63,7 @@ public interface ChordMessageInterface extends Remote
     * @param stream  – data to be stored
     */
     public void put(long guidObject, InputStream inputStream) throws IOException, RemoteException;
-    
+        
     /**
     * Retrieves the data associated with GUID from one of the nodes responsible for it
     * @param guidObject –file name
