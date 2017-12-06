@@ -505,12 +505,13 @@ public class DFS
         for(int i = 0; i < pages.size(); i++)
         {
         	JsonObject p = pages.get(i).getAsJsonObject();
+        	long pageID = p.get("guid").getAsLong();
         	mapCounter.add(p.get("guid").getAsLong());
         	long guid = md5("Metadata");
             ChordMessageInterface peer = chord.locateSuccessor(guid);
         	
 
-            peer.mapContext(guid, mapperReducer, mapCounter);
+            peer.mapContext(pageID, mapperReducer, mapCounter);
             while (!mapCounter.hasCompleted());
             
             peer.reduceContext(guid, mapperReducer, reduceCounter);
