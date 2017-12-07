@@ -1,26 +1,29 @@
-import java.rmi.*;
-import java.rmi.registry.*;
-import java.rmi.server.*;
-import java.net.*;
-import java.util.*;
-import java.io.*;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.HashSet;
+import java.util.Set;
 /**
 * This class implements the CounterInterface class and keeps track of guids
 * @author Amy Yang
 * @author Tiler Dao
 * @author Christian Eirik Blydt-Hansen
 */ 
-public class Counter implements CounterInterface {
+public class Counter extends java.rmi.server.UnicastRemoteObject implements CounterInterface, Serializable {
 
 	/**Represents the counter that keeps track of guids*/
 	long counter =0;
+	Registry registry;
 	
 	/**Set of guids*/
 	Set<Long> set;
 	
-	public Counter()
+	public Counter() throws RemoteException
 	{
 		set = new HashSet<Long>();
+		//registry = LocateRegistry.createRegistry(52000);
+        //registry.rebind("Chord", this);
 	}
 	/**
 	 * Adds a guid to the set

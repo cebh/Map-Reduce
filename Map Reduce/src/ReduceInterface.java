@@ -16,5 +16,5 @@ public interface ReduceInterface  {
 	 * @param key -  guid
 	 * @param value - page content
 	 */
-	public void reduce(long key, String value[]) throws IOException;
+	public void reduce(long key, String value[], Counter counter) throws IOException;
 }

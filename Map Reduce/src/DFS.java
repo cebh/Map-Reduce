@@ -484,7 +484,7 @@ public class DFS
         Counter reduceCounter = new Counter();
         Counter completedCounter = new Counter();
         
-        Mapper mapperReducer = new Mapper();
+        Mapper mapperReducer = new Mapper(chord);
         //get number of pages
         int numPages = 0;
         JsonArray pages = null;

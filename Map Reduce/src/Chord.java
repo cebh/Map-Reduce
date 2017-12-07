@@ -23,7 +23,6 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	/**Constant*/
     public static final int M = 2;
     
-    /**Represents a TreeMap for the reduced map phase*/
     public static TreeMap<Long, String> reduceMap;
     
     /**Represents a TreeMap for the initial map phase*/
@@ -32,7 +31,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
 	ChordMessageInterface[] finger;
 
 	/** rmi registry for lookup the remote objects.*/
-    Registry registry;    
+    Registry registry;   
 
     /** Represents the node's sucessor*/
     ChordMessageInterface successor;
@@ -447,9 +446,11 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
         	}
             counter.decrement();
         } else if(isKeyInSemiCloseInterval(key, guid, successor.getId())) {
-            successor.emitMap(key, value, counter);
+        	successor.emitMap(key, value, counter);
+
         } else {
             closestPrecedingNode(key).emitMap(key,value,counter);
+
         }
     }
     
@@ -490,7 +491,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
     	for(int i = 0; i < values.length - 1; i++)
     	{
     		System.out.println("LINE" + i + ":" + values[i]);
-        	mapper.map(key, values[i]);
+        	mapper.map(key, values[i], counter);
     	}
     	counter.increment(key, values.length - 1);
          

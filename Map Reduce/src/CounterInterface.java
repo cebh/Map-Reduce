@@ -10,7 +10,7 @@ import java.io.*;
 * @author Tiler Dao
 * @author Christian Eirik Blydt-Hansen
 */
-public interface CounterInterface extends Remote 
+public interface CounterInterface extends Remote
 {
 	/**
 	 * Adds a guid to the set
@@ -22,7 +22,7 @@ public interface CounterInterface extends Remote
 	 * Checks if there are no more guids to be mapped
 	 * @return true if there no more guids, otherwise false
 	 */
-	public Boolean hasCompleted();
+	public Boolean hasCompleted() throws RemoteException;
 	
 	/**
 	 * Increments counter and removes guid from the set
