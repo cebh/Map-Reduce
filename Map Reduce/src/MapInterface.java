@@ -17,6 +17,6 @@ public interface MapInterface  {
 	 * @param key - guid
 	 * @param value - page content
 	 */
-	public void map(int key, String value) throws IOException;
+	public void map(long key, String value) throws IOException;
 }
 

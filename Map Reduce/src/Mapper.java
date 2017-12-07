@@ -16,7 +16,7 @@ public class Mapper implements MapInterface, ReduceInterface  {
 	 * @param key - guid
 	 * @param value - page content
 	 */
-	public void map(int key, String value) throws IOException
+	public void map(long key, String value) throws IOException
 	{
 		//For each word in value
 		//emit(md5(word), word +":"+1);
@@ -27,7 +27,7 @@ public class Mapper implements MapInterface, ReduceInterface  {
 	 * @param key -  guid
 	 * @param value - page content
 	 */
-	public void reduce(int key, String values[]) throws IOException
+	public void reduce(long key, String values[]) throws IOException
 	{
 		//word = values[0].split(":")[0];
 		//emit(key, word +":"+ len(values));

@@ -1,9 +1,17 @@
-import java.rmi.*;
-import java.rmi.registry.*;
-import java.rmi.server.*;
-import java.net.*;
-import java.util.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeMap;
 /**
 * @author Amy Yang
 * @author Tiler Dao
@@ -472,31 +480,21 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
      */
     public void mapContext(long key, MapInterface mapper, Counter counter) throws IOException {
         // open page
-    	System.out.println("MAP CONTEXT");
     	byte[]array = new byte[1024];
-    	
+    	System.out.println(key);
     	InputStream is = get(key);
     	is.read(array);
-    	System.out.println(new String(array));
-//    	String text = "TeXT:";
-//    	try{
-//    		while(true){
-//    			text += (char) is.re
-//    		}
-//        } catch (Exception e)
-//        {
-//        	System.out.println("Done");
-//        } finally {
-//        	try {
-//				is.close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//        	System.out.println(text);
-//        }
-        // for each line, mapper.map(key, value, counter)    
-    	
+    	String[]values = new String(array).split("/n");
+    	//length - 1 because the last row is blank when splitting by "/n"
+    	// for each line, mapper.map(key, value, counter)   
+    	for(int i = 0; i < values.length - 1; i++)
+    	{
+    		System.out.println("LINE" + i + ":" + values[i]);
+        	mapper.map(key, values[i]);
+    	}
+    	counter.increment(key, values.length - 1);
+         
+    	//create new threads?
     }
 
     /**
@@ -507,26 +505,19 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
      * @throws IOException 
      */
     public void reduceContext(long key, ReduceInterface reducer, Counter counter) throws IOException {
-        // open page
-        // for each line, mapper.map(key, value, counter)
-        
-    	ChordMessageInterface peer = locateSuccessor(key);
-        InputStream is = peer.get(key);
-        String text = "THE STUFF IS:";
-        try{
-        	text += (char) is.read();
-        } catch (Exception e)
+        if(key != guid)
         {
-        	System.out.println("Done");
-        } finally {
-        	is.close();
-        	System.out.println(text);
+        	counter.add(guid);
+        	successor.reduceContext(key, reducer, counter);
+        	//new thread that iterates over treemap and executes reducer.reduce(key, value, counter)
+        	//when it completes, call counter.increment(guid,n) where n is number of rows and guid is peer guid
+        	Set<Long> keySet = reduceMap.keySet();
+        	for(Long k : keySet)
+        	{
+        		//reducer.reduce(k, reduceMap.get(k), counter);
+        		//needs to be values[]
+        	}
         }
-//        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-//        int nRead = is.read(array, 0, array.length);
-//        buffer.write(array, 0, nRead);
-//        buffer.flush();
-//        is.close();
     }
 
     /**

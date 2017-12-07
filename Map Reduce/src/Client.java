@@ -40,6 +40,7 @@ public class Client {
         int pageNum;
 
         while(isRunning==true) {
+        	System.out.println();
             System.out.println("\nEnter a command");
             System.out.println("1. join");
             System.out.println("2. ls");
@@ -66,7 +67,7 @@ public class Client {
                         break;
                     case "2":
                         //ls
-                        System.out.println( dfs.ls());
+                        System.out.println(dfs.ls());
                         break;
                     case "3":
                         //touch
