@@ -472,14 +472,7 @@ public class Chord extends java.rmi.server.UnicastRemoteObject implements ChordM
      */
     public void mapContext(long key, MapInterface mapper, Counter counter) throws IOException {
         // open page
-//    	Scanner sc = new Scanner(get(key)).useDelimiter("\\A");
-//    	System.out.println("HERE");
-//    	while(sc.hasNext())
-//    	{
-//    		System.out.println(sc.next());
-//		}
-//    	sc.close();
-    	
+    	System.out.println("MAP CONTEXT");
     	byte[]array = new byte[1024];
     	
     	InputStream is = get(key);
